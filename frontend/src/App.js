@@ -14,14 +14,24 @@ function App(){
   const setAuth = (token, user) => {
     if (token) localStorage.setItem('token', token);
     else localStorage.removeItem('token');
-    if (user) localStorage.setItem('user', JSON.stringify(user));
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      let cartList  = []
+      user?.cart.forEach((c) => (cartList.push({ product: c?.product?._id, quantity: Number(c?.quantity)})));
+      localStorage.setItem('cart',  JSON.stringify(cartList))
+    }
     else localStorage.removeItem('user');
     setUser(user);
   };
 
+  const cart = localStorage.getItem('cart')
+  console.log("CART FRPM NAVBAR :: ", cart)
+  const qty = cart?.length || 0;
+  console.log("QUANTITY : ", qty);
+
   return (
     <BrowserRouter>
-      <NavBar user={user} onLogout={() => setAuth(null,null)} />
+      <NavBar user={user} onLogout={() => setAuth(null,null)} quantity = {qty} />
       <div style={{ padding: 20 }}>
         <Routes>
           <Route path="/" element={<ProductList user={user} />} />
