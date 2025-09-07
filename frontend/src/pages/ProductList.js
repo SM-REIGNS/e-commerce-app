@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
 
-export default function ProductList({ user }){
+export default function ProductList({ user, updateCartQty }){
   const [products, setProducts] = React.useState([]);
   const [minPrice, setMinPrice] = React.useState('');
   const [maxPrice, setMaxPrice] = React.useState('');
@@ -20,8 +20,13 @@ export default function ProductList({ user }){
 
   const addToCart = async (id) => {
     try {
-      await api.cart.add({ productId: id, quantity: 1 });
+      let res = await api.cart.add({ productId: id, quantity: 1 });
+      // localStorage.setItem('cartList', )
       alert('Added to cart');
+      let cartList  = []
+      res?.data?.cart.forEach((c) => (cartList.push({ product: c?.product?._id, quantity: c?.quantity || 0})));
+      localStorage.setItem('cart',  JSON.stringify(cartList))
+      updateCartQty()
     } catch (e) {
       alert('Please login to add to cart');
     }

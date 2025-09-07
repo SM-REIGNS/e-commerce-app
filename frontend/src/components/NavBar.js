@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function NavBar({ user, onLogout }){
+export default function NavBar({ user, onLogout, quantity }){
 
+  // get latest cart and quantity
+  // const qty = JSON.parse(localStorage.getItem('cart')).length
+  // console.log("QUANTITY : ", qty);
 
-  let quantity = user?.cart?.reduce((t, i)=> (t + i?.quantity || 0), 0) || 0;
 
   return (
     <nav style={{ display:'flex', gap:15, padding:12, borderBottom:'1px solid #eee' }}>
       <Link to="/">Products</Link>
-      <Link to="/cart">Cart({quantity})</Link>
+      <Link to="/cart">Cart({quantity || 0})</Link>
       {
         user ? (
           <>
